@@ -1,0 +1,44 @@
+ ProductHub — Product Management Dashboard
+
+> Live Demo: http://127.0.0.1:5500/index.html
+
+A production-quality, pure-frontend Product Management Dashboard built with HTML5, Tailwind CSS, and vanilla JavaScript ES modules.
+
+Features
+
+- Full CRUD — Create, read, update, and delete products
+- Debounced search — Name search (250ms debounce, case-insensitive)
+- Dynamic category filter** — Dropdown built from live product data
+- Price sorting — Low → High, High → Low, or default insertion order
+- Stock badges — Out of Stock (red), Low Stock (amber), In Stock (green)
+- Product details modal — Full info view with Edit and Delete actions
+- Confirmation modal — No browser `confirm()` — custom accessible dialog
+- Inline form validation — Per-field, on blur + on submit, with live error clearing
+- Seed data — 12 realistic products across 5 categories on first load
+- Summary cards — Total products, inventory value, low stock, out-of-stock count
+- Toast notifications — Create / update / delete success and error toasts
+- Dark mode — Toggle with persistence via localStorage
+- Responsive — Table on desktop, card layout on mobile; works at 360px, 768px, 1280px
+
+ Tech Stack 
+HTML5   Tailwind CSS     Vanilla JS     Lucide Icons    
+
+
+ Folder Structure
+product-dashboard/
+├── index.html           
+└── src/
+    ├── app.js           
+    ├── storage.js       
+    ├── state.js         
+    ├── render.js        
+    ├── validation.js    
+    ├── utils.js         
+    └── seed.js   
+
+
+
+
+
+
+
