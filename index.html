@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Dashboard</title>
+  <meta name="description" content="A modern product management dashboard with full CRUD, search, filter, and sorting." />
+
+  <!-- Tailwind CSS via CDN — JIT mode, dark-mode class strategy -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+
+  <!-- Inter font for clean SaaS look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+
+    *, *::before, *::after { transition-property: background-color, border-color, color; transition-duration: 150ms; }
+    .no-transition, .no-transition * { transition: none !important; }
+    :focus-visible { outline: 2px solid #7c3aed; outline-offset: 2px; border-radius: 4px; }
+  </style>
+</head>
+
+<body class="h-full bg-gray-50 dark:bg-gray-950 font-sans antialiased">
+
+
+  <div class="min-h-full flex flex-col">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-30 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+
+        <!-- Logo / Brand -->
+        <div class="flex items-center gap-2.5 shrink-0">
+          <div class="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center">
+            <i data-lucide="package" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="font-semibold text-gray-900 dark:text-white text-base hidden sm:block">
+            ProductHub
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+
+          
+          <button
+            id="btn-reset"
+            type="button"
+            class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+            title="Reset to seed data"
+            aria-label="Reset demo data"
+          >
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            Reset demo
+          </button>
+          <button
+            id="btn-dark-mode"
+            type="button"
+            class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+            aria-label="Toggle dark mode"
+          >
+            <i data-lucide="moon" class="w-4 h-4"></i>
+          </button>
+          <button
+            id="btn-add-product"
+            type="button"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 active:bg-violet-800 transition-colors shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
+            aria-label="Add new product"
+          >
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">Add Product</span>
+            <span class="sm:hidden">Add</span>
+          </button>
+
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+ 
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Product Inventory</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Manage your products, track stock levels and inventory value.</p>
+      </div>
+
+ 
+      <div
+        id="summary-cards"
+        class="grid grid-cols-2 lg:grid-cols-4 gap-4"
+        aria-label="Inventory summary"
+      >
+ 
+      </div>
+
+    
+      <div class="flex flex-col sm:flex-row gap-3">
+
+        <!-- Search -->
+        <div class="relative flex-1">
+          <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+            <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+          </div>
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Search products…"
+            class="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors"
+            aria-label="Search products by name"
+            autocomplete="off"
+          />
+        </div>
+
+    
+        <select
+          id="filter-category"
+          class="sm:w-44 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors cursor-pointer"
+          aria-label="Filter by category"
+        >
+          <option value="">All Categories</option>
+        </select>
+
+
+        <select
+          id="sort-select"
+          class="sm:w-44 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors cursor-pointer"
+          aria-label="Sort products"
+        >
+          <option value="">Default order</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+        </select>
+
+      </div>
+      <div
+        id="product-list"
+        role="region"
+        aria-label="Product list"
+        aria-live="polite"
+      >
+      </div>
+
+    </main>
+    <footer class="border-t border-gray-100 dark:border-gray-800 mt-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-xs text-gray-400 dark:text-gray-600">
+      </div>
+    </footer>
+
+  </div>
+
+  <div
+    id="toast-container"
+    class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 max-w-xs w-full pointer-events-none"
+    aria-label="Notifications"
+    aria-live="polite"
+    aria-atomic="false"
+  ></div>
+  <script type="module" src="./src/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
